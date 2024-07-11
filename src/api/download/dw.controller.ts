@@ -1,26 +1,13 @@
 import { Request, Response } from 'express';
-import { downloadAndConvertAudio } from './dw.service';
-import fs from 'fs';
+import { downloadAndConvertAudio } from '../download/dw.service';
+import path from 'path';
 
 export const downloadAudio = async (req: Request, res: Response) => {
     const { url } = req.body;
-
-    if (!url) {
-        return res.status(400).json({ error: 'URL is required' });
-    }
-
     try {
-        const filePath = await downloadAndConvertAudio(url);
-        res.download(filePath, (err) => {
-            if (err) {
-                console.error(`Error sending file: ${err.message}`);
-            } else {
-                // Delete the file after sending it
-                //fs.unlinkSync(filePath);
-                //console.log(`Temporary audio file deleted: ${filePath}`);
-            }
-        });
+        const audioPath = await downloadAndConvertAudio(url);
+        res.json({ path: `/audio/${path.basename(audioPath)}` });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to download audio' });
+        res.status(500).json({ error: error });
     }
 };
