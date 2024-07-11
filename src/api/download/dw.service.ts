@@ -13,8 +13,13 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 
 export const downloadAndConvertAudio = async (url: string): Promise<string> => {
     const tempDir = path.join(__dirname, '..', 'temp');
+    const audioDir = path.join(__dirname, '..', 'public', 'audio');
+
     if (!fs.existsSync(tempDir)) {
         fs.mkdirSync(tempDir);
+    }
+    if (!fs.existsSync(audioDir)) {
+        fs.mkdirSync(audioDir);
     }
 
     try {
@@ -23,7 +28,7 @@ export const downloadAndConvertAudio = async (url: string): Promise<string> => {
         const title = info.videoDetails.title.replace(/[^a-z0-9]/gi, '_').toLowerCase(); // Sanitize title
         const videoId = uuidv4();
         const videoPath = path.join(tempDir, `${videoId}.mp4`);
-        const audioPath = path.join(tempDir, `${title}.wav`);
+        const audioPath = path.join(audioDir, `${title}.wav`);
 
         console.log(`Downloading video from URL: ${url}`);
         await youtubeDl(url, { output: videoPath });

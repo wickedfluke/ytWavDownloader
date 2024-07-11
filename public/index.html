@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Audio Downloader</title>
+</head>
+<body>
+    <h1>YouTube Audio Downloader</h1>
+    <form id="download-form">
+        <label for="url">YouTube Video URL:</label>
+        <input type="text" id="url" name="url" required>
+        <button type="submit">Download Audio</button>
+    </form>
+    <p id="message"></p>
+    <script>
+        document.getElementById('download-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('url').value;
+            const message = document.getElementById('message');
+            message.textContent = 'Processing...';
+
+            try {
+                const response = await fetch('/api/audio/download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url })
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    message.innerHTML = `Download complete! <a href="${result.path}" download>Download your audio</a>`;
+                } else {
+                    message.textContent = `Error: ${result.error}`;
+                }
+            } catch (err) {
+                message.textContent = `Error: ${err.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
