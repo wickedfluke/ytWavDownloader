@@ -12,8 +12,8 @@ const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 export const downloadAndConvertAudio = async (url: string): Promise<string> => {
-    const tempDir = path.join(__dirname, '..', 'temp');
-    const audioDir = path.join(__dirname, '..', 'public', 'audio');
+    const tempDir = path.join(__dirname, '..', '..', 'temp');
+    const audioDir = path.join(__dirname, '..', '..', 'public', 'audio');
 
     if (!fs.existsSync(tempDir)) {
         fs.mkdirSync(tempDir);
